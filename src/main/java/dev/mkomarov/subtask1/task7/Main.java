@@ -3,25 +3,27 @@ package dev.mkomarov.subtask1.task7;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Main {
-    private static final Logger log = LoggerFactory.getLogger(Main.class);
+class Main {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        Thread fastTask = new Thread(() -> {
-            for (int i = 0; i < 10_000; i++) {
-                log.info("{} fast step {}", Thread.currentThread().getName(), i);
+        new Thread(() -> {
+            long startTime = System.currentTimeMillis();
+            for (int i = 0; i < 1_000_000; i++) {
+                Math.sin(i * 24);
             }
-        });
-        Thread slowTask = new Thread(() -> {
-            for (int i = 0; i < 10_000; i++) {
-                log.info("{} slow step {}", Thread.currentThread().getName(), i);
+            long endTime = System.currentTimeMillis();
+            logger.info("Without yield: {}", endTime - startTime);
+        }).start();
+
+        new Thread(() -> {
+            long startTime = System.currentTimeMillis();
+            for (int i = 0; i < 1_000_000; i++) {
+                Math.sin(i * 24);
                 Thread.yield();
             }
-        });
-
-        fastTask.start();
-        slowTask.start();
-
-        // Slow task will finish later than fast task
+            long endTime = System.currentTimeMillis();
+            logger.info("With yield: {}", endTime - startTime);
+        }).start();
     }
 }
