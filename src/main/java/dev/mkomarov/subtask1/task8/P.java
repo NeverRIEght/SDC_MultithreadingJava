@@ -2,16 +2,16 @@ package dev.mkomarov.subtask1.task8;
 
 import java.util.concurrent.TimeUnit;
 
-public class P extends Thread {
+class P extends Thread {
 
-    private static final int m = 200;
+    private static final int M = 200;
     private boolean state = false;
 
     @Override
     public void run() {
-        while (!this.isInterrupted()) {
+        while (!isInterrupted()) {
             try {
-                TimeUnit.MILLISECONDS.sleep(m);
+                TimeUnit.MILLISECONDS.sleep(M);
                 toggleBooleanState();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -29,6 +29,6 @@ public class P extends Thread {
     }
 
     int getM() {
-        return m;
+        return M;
     }
 }

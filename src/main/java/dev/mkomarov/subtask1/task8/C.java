@@ -5,11 +5,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-public class C extends Thread {
-    private static final Logger log = LoggerFactory.getLogger(C.class);
+class C extends Thread {
+    private static final Logger logger = LoggerFactory.getLogger(C.class);
 
     private final P producer;
-    private final int k = 2000;
+    private static final int K = 2000;
     private int elapsedTime = 0;
 
     C(P producer) {
@@ -18,7 +18,7 @@ public class C extends Thread {
 
     @Override
     public void run() {
-        while (elapsedTime < k) {
+        while (elapsedTime < K) {
             synchronized (producer) {
                 while (!producer.getBooleanState()) {
                     try {
@@ -29,7 +29,7 @@ public class C extends Thread {
                 }
             }
 
-            log.info("Remaining time: {}", k - elapsedTime);
+            logger.info("Remaining time: {}", K - elapsedTime);
             try {
                 TimeUnit.MILLISECONDS.sleep(producer.getM() / 10);
                 elapsedTime += producer.getM() / 10;
