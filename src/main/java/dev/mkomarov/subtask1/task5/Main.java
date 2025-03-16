@@ -3,25 +3,31 @@ package dev.mkomarov.subtask1.task5;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
-public class Main {
-    private static final Logger log = LoggerFactory.getLogger(Main.class);
+class Main {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+    private static final BlockingQueue<String> queue = new LinkedBlockingQueue<>();
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public static void main(String[] args) throws InterruptedException{
-        Thread subThread = new Thread(() -> {
+    public static void main(String[] args) {
+        executor.submit(() -> {
             try {
-                log.info("Sub-thread falls to sleep");
-                TimeUnit.SECONDS.sleep(3);
-                log.info("Sub-thread is awake");
+                logger.info("Sub-thread is waiting for an element");
+                String element = queue.take();
+                logger.info("Sub-thread received: {}", element);
             } catch (InterruptedException e) {
-                log.warn("Sub-thread was interrupted while sleeping", e);
+                logger.warn("Sub-thread was interrupted while waiting", e);
             }
         });
 
-        subThread.start();
-        TimeUnit.SECONDS.sleep(1);
-        log.info("Interrupting sub-thread");
-        subThread.interrupt();
+        try {
+            TimeUnit.SECONDS.sleep(3);
+            logger.info("Shutting down executor");
+            executor.shutdownNow();
+        } catch (InterruptedException e) {
+            logger.error("Interrupted Exception");
+            Thread.currentThread().interrupt();
+        }
     }
 }
