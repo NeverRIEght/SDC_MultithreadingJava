@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class CustomThread extends Thread {
-    private static final Logger LOG = LoggerFactory.getLogger(CustomThread.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomThread.class);
     private final int numberOfStrings;
 
     CustomThread(int numberOfStrings) {
@@ -14,7 +14,7 @@ class CustomThread extends Thread {
     @Override
     public void run() {
         for (int i = 0; i < numberOfStrings; i++) {
-            LOG.info("{} {}", Thread.currentThread().getName(), i);
+            logger.info("{} {}", Thread.currentThread().getName(), i);
         }
     }
 }
