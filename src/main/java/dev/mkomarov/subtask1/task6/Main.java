@@ -1,6 +1,6 @@
 package dev.mkomarov.subtask1.task6;
 
-public class Main {
+class Main {
     public static void main(String[] args) {
         Thread walkMin = new Thread(new WalkThread(), "Min");
         Thread talkMax = new Thread(new TalkThread(), "Max");
