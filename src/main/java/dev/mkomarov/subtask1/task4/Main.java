@@ -6,14 +6,15 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main {
-    private static final Logger log = LoggerFactory.getLogger(Main.class);
-    static int numberOfThreads = 4;
+class Main {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+    private static final int NUMBER_OF_THREADS = 4;
+    private static final int NUMBER_OF_MESSAGES_PER_THREAD = 10;
 
     public static void main(String[] args) {
-        List<Thread> threads = new ArrayList<>(numberOfThreads);
+        List<Thread> threads = new ArrayList<>(NUMBER_OF_THREADS);
 
-        for (int i = 0; i < numberOfThreads; i++) {
+        for (int i = 0; i < NUMBER_OF_THREADS; i++) {
             PrinterThread thread = new PrinterThread(generateMessages(i));
             threads.add(thread);
             thread.start();
@@ -23,21 +24,19 @@ public class Main {
             try {
                 t.join();
             } catch (InterruptedException e) {
-                log.error("Main Thread in interrupted!");
+                logger.error("Main Thread in interrupted!");
             }
         });
     }
 
     private static List<String> generateMessages(int threadNumber) {
         List<String> output = new ArrayList<>();
-        if (threadNumber < 0 || threadNumber >= numberOfThreads) {
-            log.error("Invalid threadNumber");
+        if (threadNumber < 0 || threadNumber >= NUMBER_OF_THREADS) {
+            logger.error("Invalid threadNumber");
             return output;
         }
 
-        int numberOfMessages = 10;
-
-        for (int i = 1; i <= numberOfMessages; i++) {
+        for (int i = 1; i <= NUMBER_OF_MESSAGES_PER_THREAD; i++) {
             output.add("Message" + i * (threadNumber + 1));
         }
 

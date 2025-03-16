@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class PrinterThread extends Thread {
-    private static final Logger log = LoggerFactory.getLogger(PrinterThread.class);
+class PrinterThread extends Thread {
+    private static final Logger logger = LoggerFactory.getLogger(PrinterThread.class);
     private final List<String> messages;
 
     PrinterThread(List<String> messages) {
@@ -16,7 +16,7 @@ public class PrinterThread extends Thread {
     @Override
     public void run() {
         for (String message : messages) {
-            log.info("{} says: {}", Thread.currentThread().getName(), message);
+            logger.info("{} says: {}", Thread.currentThread().getName(), message);
         }
     }
 }
