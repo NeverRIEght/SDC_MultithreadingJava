@@ -1,5 +1,7 @@
 package dev.mkomarov.task2.importer;
 
+import dev.mkomarov.task2.entity.Account;
+import dev.mkomarov.task2.entity.Currency;
 import dev.mkomarov.task2.entity.Participant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +28,14 @@ public class CsvImporter implements Importer {
             participants = linesStream
                     .skip(1)
                     .map(line -> line.split(String.valueOf(delimiter)))
-                    .map(parts -> new Participant(
-                            parts[0],
-                            Integer.parseInt(parts[1]),
-                            Integer.parseInt(parts[2]),
-                            Integer.parseInt(parts[3])
-                    ))
+                    .map(parts -> {
+                        List<Account> accounts = List.of(
+                            new Account(Currency.USD, Integer.parseInt(parts[1])),
+                            new Account(Currency.EUR, Integer.parseInt(parts[2])),
+                            new Account(Currency.MNT, Integer.parseInt(parts[3]))
+                        );
+                        return new Participant(parts[0], accounts);
+                    })
                     .toList();
         } catch (IOException e) {
             logger.error("IOException while trying to import data from file with path: {}", filePath);
