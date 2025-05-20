@@ -64,6 +64,12 @@ public class LockedState implements TradeState {
                     seller.getAccount(request.getFromCurrency()).getAmount() + sellerToAdd
             );
 
+            exchange.setRate(request.getFromCurrency(), request.getToCurrency(),
+                    exchange.getRate(request.getFromCurrency(), request.getToCurrency()) + 0.05);
+
+            exchange.setRate(request.getToCurrency(), request.getFromCurrency(),
+                    exchange.getRate(request.getToCurrency(), request.getFromCurrency()) - 0.05);
+
             LOG.info("Transfer completed, unlocking accounts. Commission taken: {} {}",
                     commission, request.getFromCurrency());
 
