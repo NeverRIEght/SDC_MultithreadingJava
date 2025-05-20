@@ -1,9 +1,10 @@
 package dev.mkomarov.task2;
 
-import dev.mkomarov.task2.entity.Currency;
+import dev.mkomarov.task2.entity.participant.Currency;
 import dev.mkomarov.task2.entity.Exchange;
-import dev.mkomarov.task2.entity.Participant;
+import dev.mkomarov.task2.entity.participant.Participant;
 import dev.mkomarov.task2.importer.CsvImporter;
+import dev.mkomarov.task2.printer.BalancePrinter;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -27,5 +28,7 @@ public class Main {
         for (Participant p : participants) {
             new Thread(p).start();
         }
+
+        new Thread(new BalancePrinter(participants)).start();
     }
 }

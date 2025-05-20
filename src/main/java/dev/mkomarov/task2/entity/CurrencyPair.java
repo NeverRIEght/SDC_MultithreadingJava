@@ -1,5 +1,7 @@
 package dev.mkomarov.task2.entity;
 
+import dev.mkomarov.task2.entity.participant.Currency;
+
 import java.util.Objects;
 
 public class CurrencyPair {

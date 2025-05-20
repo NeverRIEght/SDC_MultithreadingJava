@@ -1,16 +1,20 @@
 package dev.mkomarov.task2.entity.traderequest.state;
 
 import dev.mkomarov.task2.entity.Exchange;
-import dev.mkomarov.task2.entity.Participant;
+import dev.mkomarov.task2.entity.participant.Participant;
 import dev.mkomarov.task2.entity.traderequest.TradeRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
 public class MatchingState implements TradeState {
+    private static final Logger LOG = LoggerFactory.getLogger(MatchingState.class);
+
     @Override
     public void handle(TradeRequest request, Exchange exchange) {
-        System.out.println("[State: Matching] Поиск подходящего продавца...");
+        LOG.info("Looking for a seller...");
 
         List<Participant> participants = exchange.getParticipants();
 
@@ -19,11 +23,10 @@ public class MatchingState implements TradeState {
                 continue;
             }
 
-            if (candidate.isWillingToSell(request, exchange)) {
+            if (candidate.isWillingToSell(request)) {
                 request.setSeller(candidate);
                 request.setUpdatedDateTime(ZonedDateTime.now());
 
-                System.out.println("[State: Matching] Seller found: " + candidate.getName());
                 request.setState(new MatchedState());
                 return;
             }

@@ -1,8 +1,8 @@
 package dev.mkomarov.task2.importer;
 
-import dev.mkomarov.task2.entity.Account;
-import dev.mkomarov.task2.entity.Currency;
-import dev.mkomarov.task2.entity.Participant;
+import dev.mkomarov.task2.entity.participant.Account;
+import dev.mkomarov.task2.entity.participant.Currency;
+import dev.mkomarov.task2.entity.participant.Participant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,8 +1,8 @@
 package dev.mkomarov.task2.entity.traderequest;
 
-import dev.mkomarov.task2.entity.Currency;
+import dev.mkomarov.task2.entity.participant.Currency;
 import dev.mkomarov.task2.entity.Exchange;
-import dev.mkomarov.task2.entity.Participant;
+import dev.mkomarov.task2.entity.participant.Participant;
 import dev.mkomarov.task2.entity.traderequest.state.CreatedState;
 import dev.mkomarov.task2.entity.traderequest.state.TradeState;
 
@@ -90,5 +90,20 @@ public class TradeRequest {
 
     public void setUpdatedDateTime(ZonedDateTime updatedDateTime) {
         this.updatedDateTime = updatedDateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "TradeRequest{" +
+                "state=" + state +
+                ", buyer=" + buyer +
+                ", seller=" + seller +
+                ", fromCurrency=" + fromCurrency +
+                ", toCurrency=" + toCurrency +
+                ", fromCurrencyAmount=" + fromCurrencyAmount +
+                ", toCurrencyAmount=" + toCurrencyAmount +
+                ", createdDateTime=" + createdDateTime +
+                ", updatedDateTime=" + updatedDateTime +
+                '}';
     }
 }

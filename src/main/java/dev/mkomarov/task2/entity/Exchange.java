@@ -1,6 +1,8 @@
 package dev.mkomarov.task2.entity;
 
 import dev.mkomarov.task2.entity.traderequest.TradeRequest;
+import dev.mkomarov.task2.entity.participant.Currency;
+import dev.mkomarov.task2.entity.participant.Participant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +80,7 @@ public class Exchange {
             }
 
             participants.add(participant);
-            System.out.printf("Participant added: %s\n", participant.getName());
+            System.out.printf("Participant added: %s%n", participant.getName());
             registrationFinished.signalAll();
 
         } catch (InterruptedException e) {

@@ -1,10 +1,13 @@
-package dev.mkomarov.task2.entity;
+package dev.mkomarov.task2.entity.participant;
 
+import dev.mkomarov.task2.entity.Exchange;
 import dev.mkomarov.task2.entity.traderequest.TradeRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents the participant of trade process.
@@ -14,19 +17,9 @@ public class Participant implements Runnable {
     private final String name;
     private final List<Account> accounts;
 
-    public Participant(Exchange exchange, String name, List<Account> accounts) {
-        this.exchange = exchange;
-        this.name = String.valueOf(name);
-        this.accounts = new ArrayList<>(accounts);
-    }
-
     public Participant(String name, List<Account> accounts) {
         this.name = String.valueOf(name);
         this.accounts = new ArrayList<>(accounts);
-    }
-
-    public List<Account> getAccounts() {
-        return new ArrayList<>(accounts);
     }
 
     public String getName() {
@@ -45,29 +38,31 @@ public class Participant implements Runnable {
             try {
                 if (accounts.size() < 2) continue;
 
-                Account acc1 = accounts.get((int)(Math.random() * accounts.size()));
-                Account acc2 = accounts.get((int)(Math.random() * accounts.size()));
-                while (acc1 == acc2) {
-                    acc2 = accounts.get((int)(Math.random() * accounts.size()));
+                Random random = new Random();
+
+                Account acc1 = accounts.get(random.nextInt(accounts.size()));
+                Account acc2 = accounts.get(random.nextInt(accounts.size()));
+                while (acc1.equals(acc2)) {
+                    acc2 = accounts.get(random.nextInt(accounts.size()));
                 }
 
                 Currency firstCurrency = acc1.getCurrency();
                 Currency secondCurrency = acc2.getCurrency();
 
-                double amount1 = Math.min(10, acc1.getAmount());
-                double amount2 = Math.min(10, acc2.getAmount());
+                double firstAmount = random.nextDouble(10);
+                double secondAmount = random.nextDouble(10);
 
                 TradeRequest request = new TradeRequest(
                         this,
                         firstCurrency,
                         secondCurrency,
-                        amount1,
-                        amount2
+                        firstAmount,
+                        secondAmount
                 );
 
                 Exchange.getInstance().submitRequest(request);
 
-                Thread.sleep(1000);
+                TimeUnit.MILLISECONDS.sleep(random.nextInt(2000));
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -75,7 +70,7 @@ public class Participant implements Runnable {
         }
     }
 
-    public boolean isWillingToSell(TradeRequest request, Exchange exchange) {
+    public boolean isWillingToSell(TradeRequest request) {
         Currency desiredCurrency = request.getFromCurrency();
         Account accountFrom = getAccount(desiredCurrency);
 
@@ -106,5 +101,14 @@ public class Participant implements Runnable {
     @Override
     public int hashCode() {
         return Objects.hash(name, accounts);
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" +
+                "exchange=" + exchange +
+                ", name='" + name + '\'' +
+                ", accounts=" + accounts +
+                '}';
     }
 }

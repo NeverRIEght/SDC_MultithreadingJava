@@ -1,5 +1,6 @@
-package dev.mkomarov.task2.entity;
+package dev.mkomarov.task2.entity.participant;
 
+import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Account {
@@ -35,5 +36,28 @@ public class Account {
 
     public ReentrantLock getLock() {
         return lock;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Double.compare(amount, account.amount) == 0
+                && currency == account.currency
+                && Objects.equals(lock, account.lock);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(currency, amount, lock);
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" +
+                "currency=" + currency +
+                ", amount=" + amount +
+                ", lock=" + lock +
+                '}';
     }
 }

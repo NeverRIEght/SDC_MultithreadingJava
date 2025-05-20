@@ -1,16 +1,20 @@
 package dev.mkomarov.task2.entity.traderequest.state;
 
-import dev.mkomarov.task2.entity.Account;
+import dev.mkomarov.task2.entity.participant.Account;
 import dev.mkomarov.task2.entity.Exchange;
-import dev.mkomarov.task2.entity.Participant;
+import dev.mkomarov.task2.entity.participant.Participant;
 import dev.mkomarov.task2.entity.traderequest.TradeRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
 
 public class LockedState implements TradeState {
+    private static final Logger LOG = LoggerFactory.getLogger(LockedState.class);
+
     @Override
     public void handle(TradeRequest request, Exchange exchange) {
-        System.out.println("[State: Locked] Attempting to trade...");
+        LOG.info("Locking accounts...");
 
         Participant buyer = request.getBuyer();
         Participant seller = request.getSeller();
@@ -29,7 +33,7 @@ public class LockedState implements TradeState {
         boolean lockedSeller = sellerAccount.getLock().tryLock();
 
         if (!lockedBuyer || !lockedSeller) {
-            System.out.println("[State: Locked] Can not acquire all locks, abort");
+            LOG.info("Can not acquire all locks, abort");
             if (lockedBuyer) buyerAccount.unlock();
             if (lockedSeller) sellerAccount.unlock();
             return;
@@ -37,13 +41,13 @@ public class LockedState implements TradeState {
 
         try {
             if (buyerAccount.getAmount() < buyerToWithdraw) {
-                System.out.println("[State: Locked] Unsufficient funds on buyer side. Trade canceled.");
+                LOG.info("Unsufficient funds on buyer side, abort");
                 request.setState(new CanceledState());
                 return;
             }
 
             if (sellerAccount.getAmount() < sellerToWithdraw) {
-                System.out.println("[State: Locked] Unsufficient funds on seller side. Trade canceled.");
+                LOG.info("Unsufficient funds on seller side, abort");
                 request.setState(new CanceledState());
                 return;
             }
@@ -60,7 +64,7 @@ public class LockedState implements TradeState {
                     seller.getAccount(request.getFromCurrency()).getAmount() + sellerToAdd
             );
 
-            System.out.printf("[State: Locked] Trade Completed. Commission: %.4f %s%n",
+            LOG.info("Transfer completed, unlocking accounts. Commission taken: {} {}",
                     commission, request.getFromCurrency());
 
             request.setUpdatedDateTime(ZonedDateTime.now());
