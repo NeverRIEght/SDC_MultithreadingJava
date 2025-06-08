@@ -19,17 +19,16 @@ public class MatchingState implements TradeState {
         List<Participant> participants = exchange.getParticipants();
 
         for (Participant candidate : participants) {
-            if (candidate.equals(request.getBuyer())) {
+            if (candidate.equals(request.getBuyer())
+                    || !candidate.isWillingToSell(request)) {
                 continue;
             }
 
-            if (candidate.isWillingToSell(request)) {
-                request.setSeller(candidate);
-                request.setUpdatedDateTime(ZonedDateTime.now());
+            request.setSeller(candidate);
+            request.setUpdatedDateTime(ZonedDateTime.now());
 
-                request.setState(new MatchedState());
-                return;
-            }
+            request.setState(new MatchedState());
+            return;
         }
     }
 
