@@ -12,11 +12,12 @@ import java.util.List;
 public class Main {
     public static final int PRODUCER_COUNT = 3;
     public static final int CONSUMER_COUNT = 3;
+    public static final int BUFFER_SIZE = 2;
 
     public static void main(String[] args) {
         List<ThumbnailTask> allTasks = new CsvImporter()
                 .importData(Paths.get("src/main/resources/images.csv"));
-        TaskBuffer buffer = new TaskBuffer(2);
+        TaskBuffer buffer = new TaskBuffer(BUFFER_SIZE);
 
         int chunkSize = allTasks.size() / PRODUCER_COUNT;
 
