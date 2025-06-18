@@ -13,10 +13,11 @@ public class Main {
     public static final int PRODUCER_COUNT = 3;
     public static final int CONSUMER_COUNT = 3;
     public static final int BUFFER_SIZE = 2;
+    public static final String IMAGES_CSV_PATH = "src/main/resources/images.csv";
 
     public static void main(String[] args) {
         List<ThumbnailTask> allTasks = new CsvImporter()
-                .importData(Paths.get("src/main/resources/images.csv"));
+                .importData(Paths.get(IMAGES_CSV_PATH));
         TaskBuffer buffer = new TaskBuffer(BUFFER_SIZE);
 
         int chunkSize = allTasks.size() / PRODUCER_COUNT;
