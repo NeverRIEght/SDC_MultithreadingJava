@@ -10,18 +10,21 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Main {
+    public static final int PRODUCER_COUNT = 3;
+    public static final int CONSUMER_COUNT = 3;
+
     public static void main(String[] args) {
         List<ThumbnailTask> allTasks = new CsvImporter()
                 .importData(Paths.get("src/main/resources/images.csv"));
         TaskBuffer buffer = new TaskBuffer(2);
 
-        int chunkSize = allTasks.size() / 3;
+        int chunkSize = allTasks.size() / PRODUCER_COUNT;
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < PRODUCER_COUNT; i++) {
             int from = i * chunkSize;
             int to;
 
-            if (i == 2) {
+            if (i == PRODUCER_COUNT - 1) {
                 to = allTasks.size(); //all remaining tasks
             } else {
                 to = from + chunkSize;
@@ -31,7 +34,7 @@ public class Main {
             new Thread(new ImageProducer(buffer, chunk)).start();
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < CONSUMER_COUNT; i++) {
             ImageConsumer consumer = new ImageConsumer(buffer, "cons" + i);
             new Thread(consumer).start();
         }
